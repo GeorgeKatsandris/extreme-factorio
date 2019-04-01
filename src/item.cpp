@@ -40,42 +40,46 @@ void Item::print_info()
 
 bool Item::is_basic_resource() {return mats.empty();}
 
-map<string,float> Item::calculate_production_requirements(const float& rate)
+map<string,float> Item::calculate_production_requirements(const float& requiredRate)
 {
 	static int indentLength = 0;
 	map<string,float> totalRates;
 	
-	if (totalRates.count(name) == 0)
-		totalRates.insert(pair<string,float>(name,rate));
-	else
-	{
-		totalRates[name] += rate;
-	}
-	
-	//cout << indent(indentLength) << name << " @" << rate <<"/min" << endl;
+	cout << indent(indentLength) << name << " @" << requiredRate <<"/min" << endl;
 	
 	if (!is_basic_resource())
 	{
+		map<string,float> submaterialTotalRates;
+		
 		for (int i = 0; i < mats.size(); i++)
 		{
-			float requiredRate = rate * quantities[i];
-			map<string,float> submaterialTotalRates;
+			float submaterialRequiredRate = requiredRate * quantities[i];
 			
 			indentLength++;
-			submaterialTotalRates = mats[i]->calculate_production_requirements(requiredRate);
+			submaterialTotalRates = mats[i]->calculate_production_requirements(submaterialRequiredRate);
 			indentLength--;
-			//mats[i]->print_info();
 			
 			for (auto it = submaterialTotalRates.cbegin(); it != submaterialTotalRates.cend(); it++)
 			{
-				if (totalRates.count(name) == 0)
-					totalRates.insert(pair<string,float>(name,rate));
+				if (totalRates.count(it->first) == 0)
+				{
+					totalRates.insert(pair<string,float>(it->first,it->second));
+				}
 				else
 				{
-					totalRates[name] += rate;
+					totalRates[it->first] += it->second;
 				}
 			}
 		}
+	}
+	
+	if (totalRates.count(name) == 0)
+	{
+		totalRates.insert(pair<string,float>(name,requiredRate));
+	}
+	else
+	{
+		totalRates[name] += requiredRate;
 	}
 	
 	return totalRates;
