@@ -5,7 +5,7 @@ TGT=main
 all: $(TGT)
 
 main: $(OBJ)
-	g++ -o $@ $^
+	g++ -o $@ $extremefactorio
 
 obj/%.o: src/%.cpp
 	g++ -c -o $@ $< -Ihead
