@@ -1,4 +1,9 @@
-#Basic mats
+#item entries must be formatted like this:
+#<name>
+#    for basic materials (no crafting ingredients)
+#<name>,<time to craft>,<quantity crafted>(,<material name>,<material quantity>)...
+
+#Basic materials
 iron ore
 copper ore
 coal
