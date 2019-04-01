@@ -52,17 +52,21 @@ map<string,float> Item::calculate_production_requirements(const float& rate)
 		totalRates[name] += rate;
 	}
 	
-	cout << indent(indentLength) << name << " @" << rate <<"/min" << endl;
+	//cout << indent(indentLength) << name << " @" << rate <<"/min" << endl;
 	
 	if (!is_basic_resource())
-	{		
+	{
 		for (int i = 0; i < mats.size(); i++)
 		{
+			float requiredRate = rate * quantities[i];
 			map<string,float> submaterialTotalRates;
 			
-			submaterialTotalRates = mats[i].calculate_production_requirements(required_rate);
+			indentLength++;
+			submaterialTotalRates = mats[i]->calculate_production_requirements(requiredRate);
+			indentLength--;
+			//mats[i]->print_info();
 			
-			for (auto it = submaterialTotalRates.cbegin(); it != submaterialTotalRates.cend(); i++)
+			for (auto it = submaterialTotalRates.cbegin(); it != submaterialTotalRates.cend(); it++)
 			{
 				if (totalRates.count(name) == 0)
 					totalRates.insert(pair<string,float>(name,rate));
