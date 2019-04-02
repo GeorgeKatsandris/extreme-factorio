@@ -1,9 +1,9 @@
 #item entries must be formatted like this:
 #
-#<name>,(drill|plant)
+#<name>,(drill|plant|ignore)
 #    for basic materials (no crafting ingredients)
 #
-#<name>,(drill|assembler|plant|ignore),<time to craft>,<quantity crafted>(,<material name>,<material quantity>)...
+#<name>,(drill|assembler|plant|furnace|ignore),<time to craft>,<quantity crafted>(,<material name>,<material quantity>)...
 #    for the rest which need to be crafted
 
 #Basic materials
@@ -14,8 +14,8 @@ petroleum gas,ignore
 water,ignore
 
 #Tier 1 crafted items
-iron plate,assembler,3.2,1,iron ore,1
-copper plate,assembler,3.2,1,copper ore,1
+iron plate,furnace,3.2,1,iron ore,1
+copper plate,furnace,3.2,1,copper ore,1
 plastic bar,plant,1,2,coal,1,petroleum gas,20
 sulfur,plant,1,2,petroleum gas,30,water,30
 
