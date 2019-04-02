@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 #include <fstream>
+#include <string>
+#include <cmath>
 #include "util.hpp"
 
 using namespace std;
@@ -25,11 +27,15 @@ class Item
 		void print_info();
 		bool is_basic_resource();
 		map<string,float> calculate_production_requirements(const float&);
+		string get_facility_count(const float&);
 		
 		static void initialise_itemList(const string&);
-		static void get_facility_count(const string&,const float&);
 		
 		static map<string,Item> itemList;
+		const static float baseAssemblerSpeed;
+		const static float baseDrillSpeed;
+		const static float basePlantSpeed;
+		const static float baseFurnaceSpeed;
 };
 
 #endif
