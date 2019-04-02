@@ -2,7 +2,6 @@
 #define MAIN_HPP
 
 #include <iostream>
-
 #include "item.hpp"
 #include "util.hpp"
 

@@ -17,8 +17,6 @@ vector<string> delim_split(string str,string delim)
 		{
 			words.push_back(str.substr(0,string::npos));
 		}
-		
-		//cout << str << endl;
 	}
 	while (delimPos != -1);
 	

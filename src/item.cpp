@@ -2,37 +2,35 @@
 
 map<string,Item> Item::itemList = {};
 
-Item::Item(const string& name,const float& craftTime,const int& craftedQuantity,const vector<Item*>& mats,const vector<int>& quantities)
+Item::Item(const string& name,const string& craftFacility,const float& craftTime,const int& craftedQuantity,const vector<Item*>& mats,const vector<int>& quantities)
 {
 	this->name = name;
+	this->craftFacility = craftFacility;
 	this->craftTime = craftTime;
 	this->craftedQuantity = craftedQuantity;
 	this->mats = mats;
 	this->quantities = quantities;
 }
-Item::Item(const string& name) : Item(name,0,1,vector<Item*>(),vector<int>()) {}
+Item::Item(const string& name,const string& craftFacility) : Item(name,craftFacility,0,1,vector<Item*>(),vector<int>()) {}
 
 void Item::print_info()
 {
-	cout << "Info for: " << name << endl;
+	cout << "=== Info for: " << name << " ===" << endl;
+	cout << "    Made in: " << craftFacility << endl;
 	
 	if (!mats.empty())
 	{
-		cout << "Time to craft (@1.0 speed): " << craftTime << endl;
+		cout << "    Time to craft (@1.0 speed): " << craftTime << endl;
 		if (craftedQuantity > 1)
 			cout << "(" << craftedQuantity << " crafted at once)" << endl;
 		
-		cout << "mats: ";
+		cout << "    mats: ";
 		cout<< quantities[0] << " x " << mats[0]->name;
 		for (int i = 1; i < mats.size(); i++)
 		{
 			cout<< ", " << quantities[i] << " x " << mats[i]->name;
 		}
 		cout << endl;
-	}
-	else
-	{
-		cout << "It is a basic material." << endl;
 	}
 	
 	cout << endl;
@@ -53,7 +51,7 @@ map<string,float> Item::calculate_production_requirements(const float& requiredR
 		
 		for (int i = 0; i < mats.size(); i++)
 		{
-			float submaterialRequiredRate = requiredRate * quantities[i];
+			float submaterialRequiredRate = (requiredRate / craftedQuantity) * quantities[i];
 			
 			indentLength++;
 			submaterialTotalRates = mats[i]->calculate_production_requirements(submaterialRequiredRate);
@@ -85,9 +83,9 @@ map<string,float> Item::calculate_production_requirements(const float& requiredR
 	return totalRates;
 }
 
-void Item::initialise_itemList(string filename)
+void Item::initialise_itemList(const string& filename)
 {
-	ifstream input("itemdb.txt");
+	ifstream input(filename);
 	string line;
 	vector<string> words;
 	
@@ -96,6 +94,7 @@ void Item::initialise_itemList(string filename)
 		if (!line.empty() && line[0] != '#')
 		{
 			string name;
+			string craftFacility;
 			float craftTime;
 			int craftedQuantity;
 			vector<Item*> mats;
@@ -105,13 +104,14 @@ void Item::initialise_itemList(string filename)
 			
 			
 			name = words[0];
+			craftFacility = words[1];
 			
-			if (words.size() > 1)
+			if (words.size() > 2)
 			{
-				craftTime = stof(words[1]);
-				craftedQuantity = stoi(words[2]);
+				craftTime = stof(words[2]);
+				craftedQuantity = stoi(words[3]);
 				
-				for (int i = 3; i < words.size(); i += 2)
+				for (int i = 4; i < words.size(); i += 2)
 				{
 					string mat_name = words[i];
 					int mat_quantity = stoi(words[i+1]);
@@ -129,7 +129,7 @@ void Item::initialise_itemList(string filename)
 				}
 			}
 			
-			Item tempItem(name,craftTime,craftedQuantity,mats,quantities);
+			Item tempItem(name,craftFacility,craftTime,craftedQuantity,mats,quantities);
 			
 			itemList.insert(pair<string,Item>(tempItem.name,tempItem));
 		}

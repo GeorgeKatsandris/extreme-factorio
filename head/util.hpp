@@ -5,8 +5,6 @@
 #include <vector>
 #include <map>
 
-#define TEST cout << "TEST" << endl;
-
 using namespace std;
 
 template <typename T>

@@ -15,7 +15,7 @@ int main()
 	{
 		cout << "how many per minute?" << endl << "    >";
 		//cin >> requiredProductionRate;
-		requiredProductionRate = 6.5;
+		requiredProductionRate = 6;
 		cout << endl;
 		
 		cout << "=== Production rate requirement analysis: ===" << endl;
