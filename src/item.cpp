@@ -1,5 +1,9 @@
 #include "item.hpp"
 
+const float Item::baseAssemblerSpeed = 0.75;
+const float Item::baseDrillSpeed = 0.5;
+const float Item::basePlantSpeed = 1;
+const float Item::baseFurnaceSpeed = 2;
 map<string,Item> Item::itemList = {};
 
 Item::Item(const string& name,const string& craftFacility,const float& craftTime,const int& craftedQuantity,const vector<Item*>& mats,const vector<int>& quantities)
@@ -11,7 +15,7 @@ Item::Item(const string& name,const string& craftFacility,const float& craftTime
 	this->mats = mats;
 	this->quantities = quantities;
 }
-Item::Item(const string& name,const string& craftFacility) : Item(name,craftFacility,0,1,vector<Item*>(),vector<int>()) {}
+Item::Item(const string& name,const string& craftFacility) : Item(name,craftFacility,1,1,vector<Item*>(),vector<int>()) {}
 
 void Item::print_info()
 {
@@ -127,11 +131,46 @@ void Item::initialise_itemList(const string& filename)
 						quantities.push_back(mat_quantity);
 					}
 				}
+				
+				Item tempItem(name,craftFacility,craftTime,craftedQuantity,mats,quantities);
+				
+				itemList.insert(pair<string,Item>(tempItem.name,tempItem));
 			}
-			
-			Item tempItem(name,craftFacility,craftTime,craftedQuantity,mats,quantities);
-			
-			itemList.insert(pair<string,Item>(tempItem.name,tempItem));
+			else
+			{
+				Item tempItem(name,craftFacility);
+				
+				itemList.insert(pair<string,Item>(tempItem.name,tempItem));
+			}
 		}
 	}
+}
+
+string Item::get_facility_count(const float& requiredRate)
+{
+	string type = craftFacility;
+	
+	float facilitySpeed;
+	if (type == "assembler")
+		facilitySpeed = Item::baseAssemblerSpeed;
+	else if (type == "drill")
+		facilitySpeed = Item::baseDrillSpeed;
+	else if (type == "plant")
+		facilitySpeed = Item::basePlantSpeed;
+	else if (type == "furnace")
+		facilitySpeed = Item::baseFurnaceSpeed;
+	
+	float facilityRate = facilitySpeed * craftedQuantity * 60 / craftTime;
+	
+	int number = ceil(requiredRate / facilityRate);
+	
+	if (number > 1)
+		type = type + "s";
+	
+	string output;
+	if (type != "ignore")
+		output = " - needs at least " + to_string(number) + " " + type;
+	else
+		output = "";
+	return output;
 }
