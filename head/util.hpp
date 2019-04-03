@@ -1,6 +1,8 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
+#define TEST std::cout << "TEST" << endl;
+
 #include <iostream>
 #include <vector>
 #include <map>

@@ -30,12 +30,16 @@ class Item
 		string get_facility_count(const float&);
 		
 		static void initialise_itemList(const string&);
+		static void load_settings(const string&);
 		
 		static map<string,Item> itemList;
-		const static float baseAssemblerSpeed;
-		const static float baseDrillSpeed;
-		const static float basePlantSpeed;
-		const static float baseFurnaceSpeed;
+		static float baseAssemblerSpeed;
+		static float baseDrillSpeed;
+		static float basePlantSpeed;
+		static float baseFurnaceSpeed;
+		static float speedModMultiplier;
+		static float productivityModMultiplier;
+		static float efficiencyModMultiplier;
 };
 
 #endif
