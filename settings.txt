@@ -1,0 +1,13 @@
+#Upgrade level of your assembling machines (1|2|3):
+assemblerlvl,2
+
+#Upgrade level of your mining drills (burner|electric):
+drilllvl,electric
+
+#Upgrade level of your furnaces (stone|steel|electric):
+furnacelvl,electric
+
+#Upgrade level of your modules (1|2|3):
+speedmodlvl,2
+productivitymodlvl,2
+efficiencymodlvl,2
