@@ -2,20 +2,21 @@
 
 int main()
 {
+	Item::load_settings("settings.txt");
 	Item::initialise_itemList("itemdb.txt");
 	
 	string itemName;
 	float requiredProductionRate;
-	cout << "Please enter the item you want to mass-produce:" << endl << "    >";
+	cout << "Please enter the name of the item you want to mass-produce:" << endl << "    >";
 
-	//getline(cin,itemName);
-	itemName = "copper cable";
+	getline(cin,itemName);
+	//itemName = "copper cable";
 	
 	if (Item::itemList.count(itemName) != 0)
 	{
 		cout << "how many per minute?" << endl << "    >";
-		//cin >> requiredProductionRate;
-		requiredProductionRate = 100;
+		cin >> requiredProductionRate;
+		//requiredProductionRate = 100;
 		cout << endl;
 		
 		cout << "=== Production rate requirement analysis: ===" << endl;
