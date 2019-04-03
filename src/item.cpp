@@ -1,9 +1,12 @@
 #include "item.hpp"
 
-const float Item::baseAssemblerSpeed = 0.75;
-const float Item::baseDrillSpeed = 0.5;
-const float Item::basePlantSpeed = 1;
-const float Item::baseFurnaceSpeed = 2;
+float Item::baseAssemblerSpeed = -1;
+float Item::baseDrillSpeed = -1;
+float Item::basePlantSpeed = 1;
+float Item::baseFurnaceSpeed = -1;
+float Item::speedModMultiplier = -1;
+float Item::productivityModMultiplier = -1;
+float Item::efficiencyModMultiplier = -1;
 map<string,Item> Item::itemList = {};
 
 Item::Item(const string& name,const string& craftFacility,const float& craftTime,const int& craftedQuantity,const vector<Item*>& mats,const vector<int>& quantities)
@@ -85,6 +88,115 @@ map<string,float> Item::calculate_production_requirements(const float& requiredR
 	}
 	
 	return totalRates;
+}
+
+void Item::load_settings(const string& filename)
+{
+	ifstream input(filename);
+	string line;
+	vector<string> words;
+	
+	while (getline(input,line))
+	{
+		if (!line.empty() && line[0] != '#')
+		{
+			words = delim_split(line,",");
+			
+			if (words[0] == "assemblerlvl")
+			{
+				int lvl = stoi(words[1]);
+				
+				switch(lvl)
+				{
+					case 1:
+						Item::baseAssemblerSpeed = 0.5;
+						break;
+					case 2:
+						Item::baseAssemblerSpeed = 0.75;
+						break;
+					case 3:
+						Item::baseAssemblerSpeed = 1;
+						break;
+				}
+			}
+			else if (words[0] == "furnacelvl")
+			{
+				if (words[1] == "stone")
+					Item::baseFurnaceSpeed = 1;
+				if (words[1] == "steel")
+					Item::baseFurnaceSpeed = 2;
+				if (words[1] == "electric")
+					Item::baseFurnaceSpeed = 2;
+			}
+			else if (words[0] == "drilllvl")
+			{
+				if (words[1] == "burner")
+					Item::baseDrillSpeed = 0.25;
+				if (words[1] == "electric")
+					Item::baseDrillSpeed = 0.5;
+			}
+			else if (words[0] == "speedmodlvl")
+			{
+				int lvl = stoi(words[1]);
+				
+				switch (lvl)
+				{
+					case 1:
+						Item::speedModMultiplier = 1.2;
+					case 2:
+						Item::speedModMultiplier = 1.3;
+					case 3:
+						Item::speedModMultiplier = 1.5;
+				}
+			}
+			else if (words[0] == "productivitymodlvl")
+			{
+				int lvl = stoi(words[1]);
+				
+				switch (lvl)
+				{
+					case 1:
+						Item::productivityModMultiplier = 1.04;
+					case 2:
+						Item::productivityModMultiplier = 1.06;
+					case 3:
+						Item::productivityModMultiplier = 1.1;
+				}
+			}
+			else if (words[0] == "efficiencymodlvl")
+			{
+				int lvl = stoi(words[1]);
+				
+				switch (lvl)
+				{
+					case 1:
+						Item::efficiencyModMultiplier = 0.7;
+					case 2:
+						Item::efficiencyModMultiplier = 0.6;
+					case 3:
+						Item::efficiencyModMultiplier = 0.5;
+				}
+			}
+		}
+	}
+	
+	if (Item::baseAssemblerSpeed == -1)
+		cout << "WARNING: Assembling machine upgrade level not set" << endl;
+	
+	if (Item::baseDrillSpeed == -1)
+		cout << "WARNING: Mining Drill upgrade level not set" << endl;
+
+	if (Item::baseFurnaceSpeed == -1)
+		cout << "WARNING: Furnace upgrade level not set" << endl;
+	
+	if (Item::speedModMultiplier == -1)
+		cout << "WARNING: Speed module upgrade level not set" << endl;
+
+	if (Item::productivityModMultiplier == -1)
+		cout << "WARNING: Productivity module upgrade level not set" << endl;
+
+	if (Item::efficiencyModMultiplier == -1)
+		cout << "WARNING: Efficiency upgrade level not set" << endl;
 }
 
 void Item::initialise_itemList(const string& filename)
